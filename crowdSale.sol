@@ -111,15 +111,9 @@ contract Pausable is Owned {
 contract tokenDistributor is Owned, SafeMath, Pausable{
     address tokenHolderAddress;
     mapping(address => uint) whitelist;
-    
-    uint public amountRaised;   
-
     uint public rate;   
     DNetTESTToken public dnetToken;  
-
-    mapping(address => uint256) public balanceOf;
-    bool crowdsaleClosed = false;   
-    
+   
         
     function tokenDistributor(address tokenHolderAddr,uint tokensPerEther, address erc20Addr) public{
             rate = tokensPerEther;
@@ -127,7 +121,6 @@ contract tokenDistributor is Owned, SafeMath, Pausable{
             tokenHolderAddress = tokenHolderAddr;
     }
     
-    modifier isAlive() { require(!crowdsaleClosed); _;  }
     
     function () public payable whenNotPaused {
         uint tokens;
@@ -142,7 +135,6 @@ contract tokenDistributor is Owned, SafeMath, Pausable{
     }
 
     function destroy() public onlyOwner{
-        crowdsaleClosed = true;
         selfdestruct(tokenHolderAddress);
     }
     
